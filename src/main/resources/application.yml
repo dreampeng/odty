@@ -1,0 +1,31 @@
+#以下设置对tomcat启动无效
+server:
+  port: 8081
+  context-path: /odty
+#以上设置对tomcat启动无效
+odtyUrl: http://www.odty.club
+website:
+  name: odty
+  url: http://www.odty.club
+db:
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: root
+  database: odty
+
+spring:
+#  数据库设置
+  datasource:
+#    数据库驱动
+    driver-class-name: com.mysql.jdbc.Driver
+#    数据库地址
+    url: jdbc:mysql://${db.host}:${db.port}/${db.database}?useUnicode=true&amp;characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#    数据库用户名
+    username: ${db.username}
+#    数据库密码
+    password: ${db.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
