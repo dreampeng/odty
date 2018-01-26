@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 
 @RestController
-@RequestMapping("/test")
 public class SayHello {
     @Value("${odtyUrl}")
     private String odtyUrl;
@@ -21,5 +20,9 @@ public class SayHello {
     @GetMapping(value = "/hello/{name}")
     public String sayHello(@PathVariable("name") String name, @RequestParam(required = true, defaultValue = "-1") String id) {
         return "Hello , " + name + " , id : " + id + " , welcome to odty! url : " + odtyUrl + "<br> website name : " + odty.getName() + " url : " + odty.getUrl() + "<br>hashcode : " + entityManager.hashCode();
+    }
+    @GetMapping(value = "/")
+    public String sayHello(@RequestParam(required = true, defaultValue = "-1") String id) {
+        return "Hello , id : " + id + " , welcome to odty! url : " + odtyUrl + "<br> website name : " + odty.getName() + " url : " + odty.getUrl();
     }
 }

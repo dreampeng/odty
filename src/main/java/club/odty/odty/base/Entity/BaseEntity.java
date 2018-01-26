@@ -6,15 +6,20 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class BaseEntity {
-    private String uuid;
-    private Long createTime;
-    private String createBy;
-    private Long updateTime;
-    private String updateBy;
-    private Integer isVoid;
-
     @Id
     @Column(name = "uuid", unique = true, nullable = false)
+    private String uuid;
+    @Column(name = "create_time", nullable = false)
+    private Long createTime;
+    @Column(name = "create_by", nullable = false)
+    private String createBy;
+    @Column(name = "update_time")
+    private Long updateTime;
+    @Column(name = "update_by")
+    private String updateBy;
+    @Column(name = "is_void", nullable = false)
+    private Integer isVoid;
+
     public String getUuid() {
         return uuid;
     }
@@ -23,7 +28,6 @@ public class BaseEntity {
         this.uuid = uuid;
     }
 
-    @Column(name = "create_time", nullable = false)
     public Long getCreateTime() {
         return createTime;
     }
@@ -32,7 +36,7 @@ public class BaseEntity {
         this.createTime = createTime;
     }
 
-    @Column(name = "create_by", nullable = false)
+
     public String getCreateBy() {
         return createBy;
     }
@@ -41,7 +45,7 @@ public class BaseEntity {
         this.createBy = createBy;
     }
 
-    @Column(name = "update_time")
+
     public Long getUpdateTime() {
         return updateTime;
     }
@@ -50,7 +54,7 @@ public class BaseEntity {
         this.updateTime = updateTime;
     }
 
-    @Column(name = "update_by")
+
     public String getUpdateBy() {
         return updateBy;
     }
@@ -59,7 +63,7 @@ public class BaseEntity {
         this.updateBy = updateBy;
     }
 
-    @Column(name = "is_void", nullable = false)
+
     public Integer getIsVoid() {
         return isVoid;
     }

@@ -19,10 +19,4 @@ public class OdtyApplication {
     private String odtyUrl;
     @Autowired
     private Website odty;
-
-
-    @GetMapping(value = "/hello/{name}")
-    public String sayHello(@PathVariable("name") String name, @RequestParam(required = true, defaultValue = "-1") String id) {
-        return "Hello , " + name + " , id : " + id + " , welcome to odty! url : " + odtyUrl + "<br> website name : " + odty.getName() + " url : " + odty.getUrl();
-    }
 }
