@@ -1,12 +1,3 @@
-#以下设置对tomcat启动无效
-server:
-  port: 8081
-  context-path: /odty
-#以上设置对tomcat启动无效
-odtyUrl: http://www.odty.club
-website:
-  name: odty
-  url: http://www.odty.club
 db:
   host: 127.0.0.1
   port: 3306

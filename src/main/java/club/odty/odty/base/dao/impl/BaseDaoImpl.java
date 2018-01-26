@@ -74,7 +74,7 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         return query.getResultList();
     }
 
-    Boolean updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition) {
+    void updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition) {
         String hql = "update " + entityClassName + " set 1 = 1 ";
         //设置修改值
         for (String keySet : param.keySet()) {
@@ -94,6 +94,19 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
+        query.getResultList();
+    }
+
+    void delete(@NotNull Entity t) {
+    }
+
+    /**
+     * 根据参数删除
+     *
+     * @param param
+     * @return
+     */
+    void delete(@NotEmpty Map<String, Object> param) {
         return null;
     }
 

@@ -56,4 +56,20 @@ public interface BaseDao<Entity extends BaseEntity, ID> {
      */
     Boolean updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition);
 
+    /**
+     * 删除
+     *
+     * @param t
+     * @return
+     */
+    Boolean delete(@NotNull Entity t);
+
+    /**
+     * 根据参数删除
+     *
+     * @param param
+     * @return
+     */
+    Boolean delete(@NotEmpty Map<String, Object> param);
+
 }
