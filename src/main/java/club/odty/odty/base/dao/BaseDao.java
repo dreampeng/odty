@@ -54,7 +54,7 @@ public interface BaseDao<Entity extends BaseEntity, ID> {
      * @param condition 更新的条件
      * @return
      */
-    void updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition);
+    int updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition);
 
     /**
      * 删除
@@ -70,6 +70,6 @@ public interface BaseDao<Entity extends BaseEntity, ID> {
      * @param param
      * @return
      */
-    void delete(@NotEmpty Map<String, Object> param);
+    int delete(@NotEmpty Map<String, Object> param);
 
 }

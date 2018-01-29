@@ -81,7 +81,7 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> implements BaseDao<Entit
     }
 
     @Override
-    public void updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition) {
+    public int updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition) {
         String hql = "update " + entityClassName + " set 1 = 1 ";
         //设置修改值
         for (String keySet : param.keySet()) {
@@ -101,7 +101,7 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> implements BaseDao<Entit
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-        query.executeUpdate();
+        return query.executeUpdate();
     }
 
     @Override
@@ -118,14 +118,8 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> implements BaseDao<Entit
         }
     }
 
-    /**
-     * 根据参数删除
-     *
-     * @param param
-     * @return
-     */
     @Override
-    public void delete(@NotEmpty Map<String, Object> param) {
+    public int delete(@NotEmpty Map<String, Object> param) {
         String hql = "DELETE from " + entityClassName + "WHERE 1 = 1 ";
         for (String keySet : param.keySet()) {
             hql += "and " + keySet + " = :" + keySet + " ";
@@ -134,7 +128,7 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> implements BaseDao<Entit
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-        query.executeUpdate();
+        return query.executeUpdate();
     }
 
 }
