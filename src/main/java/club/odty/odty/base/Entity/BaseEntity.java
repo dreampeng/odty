@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class BaseEntity {
+public class BaseEntity  {
     @Id
     @Column(name = "uuid", unique = true, nullable = false)
     private String uuid;

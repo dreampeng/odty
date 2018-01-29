@@ -14,9 +14,4 @@ public class OdtyApplication {
     public static void main(String[] args) {
         SpringApplication.run(OdtyApplication.class, args);
     }
-
-    @Value("${odtyUrl}")
-    private String odtyUrl;
-    @Autowired
-    private Website odty;
 }

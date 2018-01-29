@@ -3,6 +3,8 @@ package club.odty.odty.base.dao.impl;
 import club.odty.odty.base.Entity.BaseEntity;
 import club.odty.odty.base.Util.TimeUtil;
 import club.odty.odty.base.Util.UUIDUtil;
+import club.odty.odty.base.dao.BaseDao;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +16,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class BaseDaoImpl<Entity extends BaseEntity, ID> {
+public class BaseDaoImpl<Entity extends BaseEntity, ID> implements BaseDao<Entity, ID> {
     @Autowired
     EntityManager entityManager;
     private Class<Entity> entityClass;
@@ -27,7 +29,8 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         this.entityClassName = entityClass.getName();
     }
 
-    Entity saveOrUpdate(@NotNull Entity t) {
+    @Override
+    public Entity saveOrUpdate(@NotNull Entity t) {
         if (t.getUuid() == null) {
             t.setUuid(UUIDUtil.createUuid());
             t.setCreateTime(TimeUtil.getTimestamp());
@@ -37,7 +40,8 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         return entityManager.merge(t);
     }
 
-    List<Entity> saveOrUpdate(@NotEmpty List<Entity> ts) {
+    @Override
+    public List<Entity> saveOrUpdate(@NotEmpty List<Entity> ts) {
         // 每100条往数据库里写入一次,相对提升性能，此值可改变
         int batchSize = 100;
         int i = 0;
@@ -48,7 +52,7 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
             } else {
                 t.setUpdateTime(TimeUtil.getTimestamp());
             }
-            entityManager.persist(t);
+            t = entityManager.merge(t);
             i++;
             if (i % batchSize == 0) {
                 entityManager.flush();
@@ -58,11 +62,13 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         return ts;
     }
 
-    Entity findByUuid(@NotEmpty ID id) {
+    @Override
+    public Entity findByUuid(@NotEmpty ID id) {
         return entityManager.find(entityClass, id);
     }
 
-    List<Entity> findByParam(@NotEmpty Map<String, Object> param) {
+    @Override
+    public List<Entity> findByParam(@NotEmpty Map<String, Object> param) {
         String hql = "FROM " + entityClassName + "WHERE 1 = 1 ";
         for (String keySet : param.keySet()) {
             hql += "and " + keySet + " = :" + keySet + " ";
@@ -74,7 +80,8 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         return query.getResultList();
     }
 
-    void updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition) {
+    @Override
+    public void updateByParam(@NotEmpty Map<String, Object> param, @NotEmpty Map<String, Object> condition) {
         String hql = "update " + entityClassName + " set 1 = 1 ";
         //设置修改值
         for (String keySet : param.keySet()) {
@@ -94,10 +101,21 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
         for (Map.Entry<String, Object> entry : condition.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-        query.getResultList();
+        query.executeUpdate();
     }
 
-    void delete(@NotNull Entity t) {
+    @Override
+    public void delete(@NotNull Entity... ts) {
+        int batchSize = 100;
+        int i = 0;
+        for (Entity t : ts) {
+            entityManager.remove(t);
+            i++;
+            if (i % batchSize == 0) {
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
     }
 
     /**
@@ -106,8 +124,17 @@ public class BaseDaoImpl<Entity extends BaseEntity, ID> {
      * @param param
      * @return
      */
-    void delete(@NotEmpty Map<String, Object> param) {
-        return null;
+    @Override
+    public void delete(@NotEmpty Map<String, Object> param) {
+        String hql = "DELETE from " + entityClassName + "WHERE 1 = 1 ";
+        for (String keySet : param.keySet()) {
+            hql += "and " + keySet + " = :" + keySet + " ";
+        }
+        Query query = entityManager.createQuery(hql);
+        for (Map.Entry<String, Object> entry : param.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        query.executeUpdate();
     }
 
 }
